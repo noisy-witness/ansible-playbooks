@@ -1,0 +1,26 @@
+---
+- hosts: all
+  vars_prompt:
+    - name: "deploying_user"
+      prompt: "user"
+      private: no
+      
+    - name: ansible_become_pass
+      prompt: "sudo password"
+      private: yes
+
+  remote_user: "{{deploying_user}}"
+
+  tasks:
+    - name: Create network 'caddy-proxy'
+      docker_network:
+        name: caddy-proxy
+
+    - name: Deploying caddy
+      include: caddy.yml
+
+    - name: Deploying Manual
+      include: manual.yml
+
+    - name: Deploying Voting Page
+      include: voting-page.yml

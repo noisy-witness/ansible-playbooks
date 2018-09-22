@@ -1,0 +1,16 @@
+---
+- name: Clone Wise Voting Page repository
+  become: yes
+  git:
+    repo="https://github.com/noisy-witness/steem-wise-voter-page.git"
+    dest="/opt/wise/voting-page"
+    accept_hostkey=yes
+    version=master
+    force=yes
+
+- name: Build Wise Voting Page docker container
+  docker_service:
+    project_src: /opt/wise/voting-page
+    files: production.yml
+    build: yes
+    nocache: yes

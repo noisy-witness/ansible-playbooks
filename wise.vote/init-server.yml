@@ -1,0 +1,48 @@
+---
+- hosts: all
+  vars_prompt:
+    - name: "deploying_user"
+      prompt: "user"
+      private: no
+      
+    - name: ansible_become_pass
+      prompt: "sudo password"
+      private: yes
+
+  remote_user: "{{deploying_user}}"
+
+  pre_tasks:
+    - name: 'install python2'
+      become: yes
+      raw: sudo apt-get -y install python
+
+    - name: Add Docker GPG key
+      become: yes
+      apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+
+    - name: Add Docker APT repository
+      become: yes
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
+
+    - name: Install list of packages
+      become: yes
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - docker-ce
+        - docker-compose
+
+    - name: Appending the group 'docker' to the user's groups
+      become: yes
+      user:
+        name: "{{ansible_user}}"
+        shell: /bin/bash
+        groups: docker
+        append: yes

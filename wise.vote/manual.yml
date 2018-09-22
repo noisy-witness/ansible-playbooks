@@ -1,0 +1,15 @@
+---
+- name: Clone Wise Manual repository
+  become: yes
+  git:
+    repo="https://github.com/noisy-witness/steem-wise-manual.git"
+    dest="/opt/wise/manual"
+    accept_hostkey=yes
+    version=master
+    force=yes
+
+- name: Build Wise Manual docker container
+  docker_service:
+    project_src: /opt/wise/manual
+    files: production.yml
+    build: yes

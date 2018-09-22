@@ -1,0 +1,14 @@
+---
+- name: Clone Wise Caddy repository
+  become: yes
+  git:
+    repo="https://github.com/noisy-witness/wise-caddy.git"
+    dest="/opt/caddy"
+    accept_hostkey=yes
+    version=master
+    force=yes
+
+- name: Build Wise Caddy docker container
+  docker_service:
+    project_src: /opt/caddy/caddy
+    build: yes
