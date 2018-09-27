@@ -2,7 +2,7 @@
 - name: Clone Wise Caddy repository
   become: yes
   git:
-    repo="https://github.com/noisy-witness/wise-caddy.git"
+    repo="https://github.com/wise-team/wise-caddy.git"
     dest="/opt/caddy"
     accept_hostkey=yes
     version=master

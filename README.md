@@ -12,7 +12,8 @@ Later, to deploy a new version of https://wise.vote/ just run:
 
 This deploy two services
 
-* https://github.com/noisy-witness/steem-wise-manual.git 
+* https://github.com/wise-team/steem-wise-manual.git
   * and mounts its on https://wise.vote/
-* https://github.com/noisy-witness/steem-wise-voter-page.git 
+* https://github.com/wise-team/steem-wise-voter-page.git
   * and mounts its https://wise.vote/voting-page/
+
