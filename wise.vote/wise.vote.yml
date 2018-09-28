@@ -22,5 +22,8 @@
     - name: Deploying Manual
       include: manual.yml
 
+    - name: Deploying wiseSQL
+      include: sql.yml
+
     - name: Deploying Voting Page
       include: voting-page.yml

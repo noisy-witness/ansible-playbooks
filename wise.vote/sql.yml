@@ -1,0 +1,15 @@
+---
+- name: Clone Wise SQL repository
+  become: yes
+  git:
+    repo="https://github.com/wise-team/steem-wise-sql.git"
+    dest="/opt/wise/sql"
+    accept_hostkey=yes
+    version=master
+    force=yes
+
+- name: Build Wise Sql docker container
+  docker_service:
+    project_src: /opt/wise/sql
+    files: production.yml
+    build: yes
