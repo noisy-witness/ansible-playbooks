@@ -15,15 +15,25 @@
     - name: Create network 'caddy-proxy'
       docker_network:
         name: caddy-proxy
+      tags:
+        - caddy
 
     - name: Deploying caddy
       include: caddy.yml
+      tags:
+        - caddy
 
     - name: Deploying Manual
       include: manual.yml
+      tags:
+        - manual
 
     - name: Deploying wiseSQL
       include: sql.yml
+      tags:
+        - sql
 
     - name: Deploying Voting Page
       include: voting-page.yml
+      tags:
+        - voting-page
