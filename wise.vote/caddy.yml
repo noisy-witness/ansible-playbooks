@@ -12,3 +12,6 @@
   docker_service:
     project_src: /opt/caddy/caddy
     build: yes
+    nocache: yes
+    recreate: always
+    restarted: yes
