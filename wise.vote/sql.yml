@@ -13,3 +13,6 @@
     project_src: /opt/wise/sql
     files: production.yml
     build: yes
+    nocache: yes
+    recreate: always
+    restarted: yes
