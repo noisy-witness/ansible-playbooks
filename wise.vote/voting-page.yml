@@ -14,3 +14,5 @@
     files: production.yml
     build: yes
     nocache: yes
+    recreate: always
+    restarted: yes
