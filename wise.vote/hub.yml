@@ -1,0 +1,20 @@
+---
+- name: Clone wiseHUB repository
+  become: yes
+  git:
+    #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/wise-hub.git"'
+    repo="https://github.com/wise-team/wise-hub.git"
+    dest="/opt/wise/hub"
+    accept_hostkey=yes
+    version=master
+    force=yes
+
+- name: Build wiseHUB docker container
+  docker_service:
+    project_src: /opt/wise/hub
+    files: production.yml
+    build: yes
+    nocache: yes
+    recreate: always
+    restarted: yes
+    

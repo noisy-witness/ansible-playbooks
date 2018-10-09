@@ -18,22 +18,27 @@
       tags:
         - caddy
 
-    - name: Deploying caddy
+    - name: Deploy caddy
       include: caddy.yml
       tags:
         - caddy
 
-    - name: Deploying Manual
+    - name: Deploy Manual
       include: manual.yml
       tags:
         - manual
 
-    - name: Deploying wiseSQL
+    - name: Deploy wiseHUB
+      include: hub.yml
+      tags:
+        - hub
+
+    - name: Deploy wiseSQL
       include: sql.yml
       tags:
         - sql
 
-    - name: Deploying Voting Page
+    - name: Deploy Voting Page
       include: voting-page.yml
       tags:
         - voting-page
