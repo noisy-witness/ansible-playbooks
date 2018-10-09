@@ -2,6 +2,7 @@
 - name: Clone Wise Manual repository
   become: yes
   git:
+    #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/steem-wise-manual.git"'
     repo="https://github.com/wise-team/steem-wise-manual.git"
     dest="/opt/wise/manual"
     accept_hostkey=yes

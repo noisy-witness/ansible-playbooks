@@ -2,6 +2,7 @@
 - name: Clone Wise SQL repository
   become: yes
   git:
+    #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/steem-wise-sql.git"'
     repo="https://github.com/wise-team/steem-wise-sql.git"
     dest="/opt/wise/sql"
     accept_hostkey=yes

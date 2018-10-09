@@ -2,6 +2,7 @@
 - name: Clone Wise Caddy repository
   become: yes
   git:
+    #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/wise-caddy.git"'
     repo="https://github.com/wise-team/wise-caddy.git"
     dest="/opt/caddy"
     accept_hostkey=yes

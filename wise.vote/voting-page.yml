@@ -2,6 +2,7 @@
 - name: Clone Wise Voting Page repository
   become: yes
   git:
+    #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/steem-wise-voter-page.git"'
     repo="https://github.com/wise-team/steem-wise-voter-page.git"
     dest="/opt/wise/voting-page"
     accept_hostkey=yes
