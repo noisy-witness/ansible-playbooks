@@ -1,0 +1,61 @@
+---
+- name: Clone steem-wise-test repository
+  become: yes
+  git:
+    #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/steem-wise-test.git"'
+    repo="https://github.com/wise-team/steem-wise-test.git"
+    dest="/opt/wise/test"
+    accept_hostkey=yes
+    version=master
+    force=yes
+
+- name: Check if slack notifications work
+  shell: |
+    #§ 'WEBHOOK_URL_FILE="' + data.config.test.healthcheck.slack.webhookUrlFilePath + '"'
+    WEBHOOK_URL_FILE="/opt/wise/slackWebhook.url"
+    test -e "$WEBHOOK_URL_FILE" || exit 120
+    WEBHOOK_URL="$(cat $WEBHOOK_URL_FILE)"
+    curl -X POST -H 'Content-type: application/json' --fail --silent --show-error --data '{"text":"Deploying steem-wise-test/healthcheck via ansible playbook"}' "${WEBHOOK_URL}" > /dev/null || exit 121
+  register: webhook_result
+  failed_when: ( webhook_result.rc not in [ 0, 120, 121 ] )
+
+- name: Ask for webhook url
+  when: webhook_result.rc != 0
+  pause:
+    prompt: "Please specify slack Webhook URL"
+  register: webhook_url
+
+- name: Save webhook url
+  when: webhook_result.rc != 0
+  become: yes
+  copy:
+    content: "{{ webhook_url.user_input }}"
+    #§ 'dest: "' + data.config.test.healthcheck.slack.webhookUrlFilePath + '"'
+    dest: "/opt/wise/slackWebhook.url"
+  no_log: true
+
+- name: Test webhook notifications
+  when: webhook_result.rc != 0
+  shell: |
+    #§ 'WEBHOOK_URL_FILE="' + data.config.test.healthcheck.slack.webhookUrlFilePath + '"'
+    WEBHOOK_URL_FILE="/opt/wise/slackWebhook.url"
+    test -e "$WEBHOOK_URL_FILE" || exit 1
+    WEBHOOK_URL="$(cat $WEBHOOK_URL_FILE)"
+    curl -X POST -H 'Content-type: application/json' --fail --silent --show-error --data '{"text":"Successfully set up slack incoming webhook for steem-wise-test/healthcheck via ansible playbook"}' "${WEBHOOK_URL}" > /dev/null
+  register: notification_send_result
+  failed_when: notification_send_result.rc != 0
+
+- name: "Setup wise healthcheck cron job"
+  cron:
+    name: "Steem-wise-test healthcheck"
+    minute: "0"
+    hour: "*"
+    job: "/opt/wise/test/healthcheck/healthcheck-run.sh > /home/jblew/cron.log 2>&1"
+  
+- name: "Run the healthcheck immediately"
+  command: "/opt/wise/test/healthcheck/healthcheck-run.sh"
+  register: immediate_healthcheck_result
+
+- debug: msg={{ immediate_healthcheck_result.stdout.split('\n') }}
+
+- debug: msg={{ immediate_healthcheck_result.stderr.split('\n') }}

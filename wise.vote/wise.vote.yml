@@ -42,3 +42,9 @@
       include: voting-page.yml
       tags:
         - voting-page
+
+    - name: Run healthcheck and setup a cron job for it
+      include: healthcheck.yml
+      tags:
+        - healthcheck
+
