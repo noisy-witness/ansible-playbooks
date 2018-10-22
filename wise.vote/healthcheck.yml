@@ -9,14 +9,6 @@
     version=master
     force=yes
 
-- name: Start hosted logs service
-  docker_service:
-    project_src: /opt/wise/test
-    files: healthcheck/hosted-logs-docker-compose.yml
-    nocache: yes
-    recreate: always
-    restarted: yes
-
 - name: Check if slack notifications work
   shell: |
     #§ 'WEBHOOK_URL_FILE="' + data.config.test.healthcheck.slack.webhookUrlFilePath + '"'
@@ -67,3 +59,11 @@
 - debug: msg={{ immediate_healthcheck_result.stdout.split('\n') }}
 
 - debug: msg={{ immediate_healthcheck_result.stderr.split('\n') }}
+
+- name: Start hosted logs service
+  docker_service:
+    project_src: /opt/wise/test
+    files: healthcheck/hosted-logs-docker-compose.yml
+    nocache: yes
+    recreate: always
+    restarted: yes
