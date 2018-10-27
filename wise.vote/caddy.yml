@@ -6,12 +6,15 @@
     repo="https://github.com/wise-team/wise-caddy.git"
     dest="/opt/caddy"
     accept_hostkey=yes
-    version=master
+    version={{ checkout_branch }}
     force=yes
 
 - name: Build Wise Caddy docker container
   docker_service:
     project_src: /opt/caddy/caddy
+    files:
+      - docker-compose.yml
+      - "docker-compose.{{ wise_environment_type }}.yml"
     build: yes
     nocache: yes
     recreate: always

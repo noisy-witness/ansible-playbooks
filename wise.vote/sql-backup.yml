@@ -13,6 +13,6 @@
 - name: "Setup db backup cron job"
   cron:
     name: "Steem-wise-sql database backup"
-    minute: "*/10"
-    hour: "*"
+    minute: "*"
+    hour: "*/6"
     job: "/opt/wise/sql/scripts/db-local-backup.sh.sh > /home/jblew/cron.log 2>&1"

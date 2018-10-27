@@ -1,0 +1,6 @@
+all:
+  hosts:
+    wise.vote:
+      wise_environment_type: production
+      #§ 'checkout_branch: ' + data.config.environments.production.deployBranch
+      checkout_branch: master

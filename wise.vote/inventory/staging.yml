@@ -1,0 +1,6 @@
+all:
+  hosts:
+    dev.wise.jblew.pl:
+      wise_environment_type: staging
+      #§ 'checkout_branch: ' + data.config.environments.staging.deployBranch
+      checkout_branch: staging

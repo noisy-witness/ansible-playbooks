@@ -1,1 +1,2 @@
-/wise.vote/wise.vote.retry
+*.retry
+/backup

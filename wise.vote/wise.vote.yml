@@ -38,6 +38,11 @@
       tags:
         - sql
 
+    - name: Backup wiseSQL and set up cron backup job
+      include: sql-backup.yml
+      tags:
+        - sql-backup
+
     - name: Deploy Voting Page
       include: voting-page.yml
       tags:

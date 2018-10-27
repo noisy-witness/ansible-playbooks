@@ -10,9 +10,8 @@
       private: yes
 
   remote_user: "{{deploying_user}}"
-
   pre_tasks:
-    - name: 'install python2'
+    - name: 'install python'
       become: yes
       raw: sudo apt-get -y install python
 

@@ -6,13 +6,15 @@
     repo="https://github.com/wise-team/steem-wise-voter-page.git"
     dest="/opt/wise/voting-page"
     accept_hostkey=yes
-    version=master
+    version={{ checkout_branch }}
     force=yes
 
 - name: Build Wise Voting Page docker container
   docker_service:
     project_src: /opt/wise/voting-page
-    files: production.yml
+    files:
+      - docker-compose.yml
+      - "docker-compose.{{ wise_environment_type }}.yml"
     build: yes
     nocache: yes
     recreate: always

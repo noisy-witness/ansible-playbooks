@@ -6,20 +6,30 @@
 
 ### wise.vote
 
-Before first deployment, you should initialize a server, to make sure that everything what is needed for later deployment will be installed beforehand.
-    
-    ansible-playbook wise.vote/init-server.yml
+Here is basic deployment guide:
+```bash
+## Production
+# Initialize staging server (once for each server)
+$ ansible-playbook -i wise.vote/inventory/production.yml wise.vote/init-server.yml
 
-Later, to deploy a new version of https://wise.vote/ just run:
+# Deploy whole wise
+$ ansible-playbook -i wise.vote/inventory/production.yml wise.vote/wise.vote.yml
 
-    ansible-playbook wise.vote/wise.vote.yml
+# Deploy some parts
+$ ansible-playbook -i wise.vote/inventory/production.yml wise.vote/wise.vote.yml --tags "sql,sql-backup,manual"
 
-This deploy two services
 
-* https://github.com/wise-team/steem-wise-manual.git
-  * and mounts its on https://wise.vote/
-* https://github.com/wise-team/steem-wise-voter-page.git
-  * and mounts its https://wise.vote/voting-page/
+## Staging: 
+# Initialize staging server (once for each server)
+$ ansible-playbook -i wise.vote/inventory/staging.yml wise.vote/init-server.yml
+
+# Deploy whole wise
+$ ansible-playbook -i wise.vote/inventory/staging.yml wise.vote/wise.vote.yml
+
+# Deploy some parts
+$ ansible-playbook -i wise.vote/inventory/staging.yml wise.vote/wise.vote.yml --tags "sql,sql-sql-backup,manual"
+```
+
 
 
 <!--§ data.config.repository.readme.generateHelpMd(data) §-->

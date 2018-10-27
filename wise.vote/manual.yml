@@ -6,13 +6,15 @@
     repo="https://github.com/wise-team/steem-wise-manual.git"
     dest="/opt/wise/manual"
     accept_hostkey=yes
-    version=master
+    version={{ checkout_branch }}
     force=yes
 
 - name: Build Wise Manual docker container
   docker_service:
     project_src: /opt/wise/manual
-    files: production.yml
+    files:
+      - docker-compose.yml
+      - "docker-compose.{{ wise_environment_type }}.yml"
     build: yes
     nocache: yes
     recreate: always
