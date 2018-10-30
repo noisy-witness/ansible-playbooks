@@ -1,0 +1,14 @@
+---
+- name: Create a zip archive of Vaultfile
+  become: yes
+  archive:
+    #§ 'path: ' + d(data.config.vault.backendFilePath)
+    path: /opt/wise/vault/Vaultfile
+    dest: /opt/wise/vault/Vaultfile.bak.zip
+    format: zip
+
+- name: "Download backup locally"
+  become: yes
+  fetch:
+    dest: "../backup/"
+    src: "/opt/wise/vault/Vaultfile.bak.zip"

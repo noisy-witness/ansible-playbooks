@@ -1,2 +1,5 @@
 *.retry
 /backup
+Vaultfile
+Vaultfile.zip
+Vaultfile.production.zip

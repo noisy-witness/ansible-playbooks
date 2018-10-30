@@ -18,6 +18,17 @@
       tags:
         - caddy
 
+    - name: Setup Hashicorp Vault
+      include: vault.yml
+      tags:
+        - vault
+
+    - name: Backup Wise vault locally
+      include: vault-backup.yml
+      tags:
+        - vault-backup
+        - backup
+
     - name: Deploy caddy
       include: caddy.yml
       tags:
@@ -42,6 +53,7 @@
       include: sql-backup.yml
       tags:
         - sql-backup
+        - backup
 
     - name: Deploy Voting Page
       include: voting-page.yml
