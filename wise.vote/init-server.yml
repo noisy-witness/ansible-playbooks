@@ -37,6 +37,7 @@
         - software-properties-common
         - docker-ce
         - docker-compose
+        - unzip
 
     - name: Appending the group 'docker' to the user's groups
       become: yes
