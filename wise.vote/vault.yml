@@ -28,8 +28,8 @@
   become: yes
   copy:
     src: "../Vaultfile.{{ wise_environment_type }}.zip"
-    #§ 'dest: ' + d(data.config.vault.backendFilePath) + '.zip'
-    dest: /opt/wise/vault/Vaultfile.zip
+    #§ 'dest: ' + d(data.config.vault.backendFilePath) + '.{{ wise_environment_type }}.zip'
+    dest: /opt/wise/vault/Vaultfile.{{ wise_environment_type }}.zip
 
 - name: "Unzip vaultfile"
   when: vaultfile_stat_results.stat.exists != True and vault_prompt_result.user_input == "Yes"
@@ -37,13 +37,19 @@
   unarchive:
     remote_src: yes
     # following prevents override, as it is crucial not to loose this file
-    #§ 'creates: ' + d(data.config.vault.backendFilePath)
-    creates: /opt/wise/vault/Vaultfile
-    #§ 'src: ' + d(data.config.vault.backendFilePath) + '.zip'
-    src: /opt/wise/vault/Vaultfile.zip
+    #§ 'creates: "' + d(data.config.vault.backendFilePath) + '.{{ wise_environment_type }}"'
+    creates: "/opt/wise/vault/Vaultfile.{{ wise_environment_type }}"
+    #§ 'src: "' + d(data.config.vault.backendFilePath) + '.{{ wise_environment_type }}.zip"'
+    src: "/opt/wise/vault/Vaultfile.{{ wise_environment_type }}.zip"
     #§ 'dest: ' + path.resolve(d(data.config.vault.backendFilePath), "..");
     dest: /opt/wise/vault
     mode: 0777 # Really, this is safe.
+
+- name: Move Vaultfile.{{ wise_environment_type }} to Vaultfile
+  when: vaultfile_stat_results.stat.exists != True and vault_prompt_result.user_input == "Yes"
+  become: yes
+  #§ 'command: "mv ' + d(data.config.vault.backendFilePath) + '.{{ wise_environment_type }} ' + ' ' + d(data.config.vault.backendFilePath) + '"'
+  command: "mv /opt/wise/vault/Vaultfile.{{ wise_environment_type }}  /opt/wise/vault/Vaultfile"
 
 - name: Build and deploy Wise Vault stack
   when:  vault_prompt_result.user_input == "Yes"
