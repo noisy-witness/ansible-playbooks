@@ -38,6 +38,7 @@
         - docker-ce
         - docker-compose
         - unzip
+        - jq
 
     - name: Appending the group 'docker' to the user's groups
       become: yes
