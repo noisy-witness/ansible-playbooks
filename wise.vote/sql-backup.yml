@@ -15,4 +15,4 @@
     name: "Steem-wise-sql database backup"
     minute: "*"
     hour: "*/6"
-    job: "/opt/wise/sql/scripts/db-local-backup.sh.sh > /home/jblew/cron.log 2>&1"
+    job: "/opt/wise/sql/scripts/db-local-backup.sh >> /home/jblew/cron.log 2>&1"
