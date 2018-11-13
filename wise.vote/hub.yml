@@ -9,14 +9,42 @@
     version={{ checkout_branch }}
     force=yes
 
-- name: Build wiseHUB docker container
-  docker_service:
-    project_src: /opt/wise/hub
-    files:
-      - docker-compose.yml
-      - "docker-compose.{{ wise_environment_type }}.yml"
-    build: yes
-    nocache: yes
-    recreate: always
-    restarted: yes
+#- name: Ask for vault username
+#  pause:
+#    prompt: "Enter vault username"
+#  register: vault_username
+#
+#- name: Ask for vault password
+#  pause:
+#    prompt: "Enter vault password"
+#    echo: no
+#  register: vault_password
+
+#- name: "Provision secrets"
+#  become: yes
+#  shell: |
+#    USERPASS_USERNAME="{{ vault_username.user_input }}"
+#    USERPASS_PASS="{{ vault_password.user_input }}"
+#    bash /opt/wise/hub/install-secrets.sh
+#  register: provision_result
+#  failed_when: provision_result.rc != 0
+
+#- name: Secrets not present
+#  stat: path=/run/wise/secrets/hub-api-approle-secret
+#  register: sec_exists
+
+#- name: fail if already run on host
+#  fail: msg="Secrets not provisioned"
+#  when: sec_exists.sec_exists.exists == False
+
+#- name: Build wiseHUB docker container
+#  docker_service:
+#    project_src: /opt/wise/hub
+#    files:
+#      - docker-compose.yml
+#      - "docker-compose.{{ wise_environment_type }}.yml"
+#    build: yes
+#    nocache: yes
+#    recreate: always
+#    restarted: yes
     
