@@ -65,3 +65,11 @@
       tags:
         - healthcheck
 
+    - name: "Setup cron job for docker system prune"
+      become: "yes"
+      cron:
+        name: "Docker system prune -f"
+        hour: "*/12"
+        job: "/usr/bin/env sh -c \"echo \\\"Running docker system prune...\\\" && docker system prune -f && echo \\\"Docker system prune done\\\" >> /var/log/wise-cron.log 2>&1 \""
+      tags:
+        - clean
