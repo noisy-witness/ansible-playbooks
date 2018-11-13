@@ -1,8 +1,14 @@
 ---
+
 - name: "Ask if vault should be deployed"
   pause:
     prompt: "Are you sure, you want to restart vault service? Unseal will be required. Type 'Yes' (capital first) to proceed"
   register: vault_prompt_result
+
+- name: Create network for vault
+  docker_network:
+    #§ 'name: ' + data.config.vault.docker.network
+    name: vault-net
 
 - name: Clone Wise Vault repository
   when: vault_prompt_result.user_input == "Yes"
