@@ -47,3 +47,7 @@
         shell: /bin/bash
         groups: docker
         append: yes
+
+    - name: Init docker swarm
+      become: yes
+      shell: docker swarm init

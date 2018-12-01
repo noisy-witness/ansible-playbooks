@@ -1,0 +1,18 @@
+---
+- name: Setup remote logging from all docker containers
+  docker_container:
+    name: logspout
+    image: gliderlabs/logspout
+    command: multiline+syslog+tls://logs-01.loggly.com:6514
+    detached: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - SYSLOG_STRUCTURED_DATA="acd5bacf-3714-46fa-87e8-b8314716cbfc@41058 tag=\"jblew_local\""
+    restart_policy: always
+
+# TODO: fix 'x509: certificate signed by unknown authority' https://www.loggly.com/docs/upgrade-tls-certificate/
+
+docker run --name logspout -d --volume=/var/run/docker.sock:/var/run/docker.sock -e SYSLOG_STRUCTURED_DATA="acd5bacf-3714-46fa-87e8-b8314716cbfc@41058 tag=\"jblew_local\"" gliderlabs/logspout multiline+syslog+tls://logs-01.loggly.com:6514
+
+docker run --name logspout -d --volume=/var/run/docker.sock:/var/run/docker.sock -e SYSLOG_STRUCTURED_DATA="acd5bacf-3714-46fa-87e8-b8314716cbfc@41058 tag=\"mort_production\"" gliderlabs/logspout multiline+syslog+tcp://logs-01.loggly.com:6514

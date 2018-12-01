@@ -19,3 +19,8 @@
     nocache: yes
     recreate: always
     restarted: yes
+
+- name: Copy nginx configuration to proxy sites dir
+  shell: |
+    cp -R /opt/wise/sql/api_proxy/sql-embed.conf /opt/wise/proxy/sites/sql/embed.conf
+  become: yes

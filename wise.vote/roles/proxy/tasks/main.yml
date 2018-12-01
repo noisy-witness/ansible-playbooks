@@ -1,0 +1,6 @@
+
+- name: Setup proxy server
+  import_tasks: proxy.yml
+  tags:
+    - proxy
+

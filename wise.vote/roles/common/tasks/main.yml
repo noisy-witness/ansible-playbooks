@@ -1,0 +1,17 @@
+
+- name: Setup remote logging service
+  import_tasks: log.yml
+  tags:
+    - log
+
+- name: Setup Hashicorp Vault
+  import_tasks: vault.yml
+  tags:
+    - vault
+
+- name: Backup Wise vault locally
+  import_tasks: vault-backup.yml
+  tags:
+    - vault-backup
+    - backup
+

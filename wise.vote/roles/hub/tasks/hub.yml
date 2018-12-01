@@ -9,6 +9,8 @@
     version={{ checkout_branch }}
     force=yes
 
+    // TODO: vault revoke by hash
+
 #- name: Ask for vault username
 #  pause:
 #    prompt: "Enter vault username"

@@ -1,5 +1,6 @@
 all:
   hosts:
+    #§ data.config.environments.production.host + ':'
     wise.vote:
       wise_environment_type: production
       #§ 'checkout_branch: ' + data.config.environments.production.deployBranch

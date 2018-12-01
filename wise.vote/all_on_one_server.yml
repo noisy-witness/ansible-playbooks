@@ -1,0 +1,74 @@
+---
+- hosts: all
+
+  vars_prompt:
+    - name: "deploying_user"
+      prompt: "user"
+      private: no
+      
+    - name: ansible_become_pass
+      prompt: "sudo password"
+      private: yes
+
+  remote_user: "{{deploying_user}}"
+
+  roles:
+    - common
+    - proxy
+    - sql
+    - hub
+    - voting-page
+    - manual
+    - healthcheck
+
+
+---
+  
+
+  tasks:
+    #moved
+
+    - name: Deploy proxy
+      include: proxy.yml
+      tags:
+        - proxy
+
+    - name: Deploy Manual
+      include: manual.yml
+      tags:
+        - manual
+
+    - name: Deploy wiseHUB
+      include: hub.yml
+      tags:
+        - hub
+
+    - name: Deploy wiseSQL
+      include: sql.yml
+      tags:
+        - sql
+
+    - name: Backup wiseSQL and set up cron backup job
+      include: sql-backup.yml
+      tags:
+        - sql-backup
+        - backup
+
+    - name: Deploy Voting Page
+      include: voting-page.yml
+      tags:
+        - voting-page
+
+    - name: Run healthcheck and setup a cron job for it
+      include: healthcheck.yml
+      tags:
+        - healthcheck
+
+    - name: "Setup cron job for docker system prune"
+      become: "yes"
+      cron:
+        name: "Docker system prune -f"
+        hour: "*/12"
+        job: "/usr/bin/env sh -c \"echo \\\"Running docker system prune...\\\" && docker system prune -f && echo \\\"Docker system prune done\\\" >> /var/log/wise-cron.log 2>&1 \""
+      tags:
+        - clean
