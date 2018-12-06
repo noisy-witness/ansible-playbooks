@@ -9,41 +9,20 @@
     version={{ checkout_branch }}
     force=yes
 
-- name: Check if slack notifications work
+- name: Notify on slack
   shell: |
-    #§ 'WEBHOOK_URL_FILE="' + data.config.test.healthcheck.slack.webhookUrlFilePath + '"'
-    WEBHOOK_URL_FILE="/opt/wise/slackWebhook.url"
-    test -e "$WEBHOOK_URL_FILE" || exit 120
-    WEBHOOK_URL="$(cat $WEBHOOK_URL_FILE)"
-    curl -X POST -H 'Content-type: application/json' --fail --silent --show-error --data '{"text":"Deploying steem-wise-test/healthcheck via ansible playbook"}' "${WEBHOOK_URL}" > /dev/null || exit 121
+    WEBHOOK_URL="{{ slack_webhook_url }}"
+    curl -X POST -H 'Content-type: application/json' --fail --silent --show-error --data '{"text":"Deploying steem-wise-test/healthcheck via ansible playbook"}' "${WEBHOOK_URL}" > /dev/null
   register: webhook_result
-  failed_when: ( webhook_result.rc not in [ 0, 120, 121 ] )
-
-- name: Ask for webhook url
-  when: webhook_result.rc != 0
-  pause:
-    prompt: "Please specify slack Webhook URL"
-  register: webhook_url
+  failed_when: ( webhook_result.rc not in [ 0 ] )
 
 - name: Save webhook url
-  when: webhook_result.rc != 0
   become: yes
   copy:
-    content: "{{ webhook_url.user_input }}"
+    content: "{{ slack_webhook_url }}"
     #§ 'dest: "' + data.config.test.healthcheck.slack.webhookUrlFilePath + '"'
     dest: "/opt/wise/slackWebhook.url"
   no_log: true
-
-- name: Test webhook notifications
-  when: webhook_result.rc != 0
-  shell: |
-    #§ 'WEBHOOK_URL_FILE="' + data.config.test.healthcheck.slack.webhookUrlFilePath + '"'
-    WEBHOOK_URL_FILE="/opt/wise/slackWebhook.url"
-    test -e "$WEBHOOK_URL_FILE" || exit 1
-    WEBHOOK_URL="$(cat $WEBHOOK_URL_FILE)"
-    curl -X POST -H 'Content-type: application/json' --fail --silent --show-error --data '{"text":"Successfully set up slack incoming webhook for steem-wise-test/healthcheck via ansible playbook"}' "${WEBHOOK_URL}" > /dev/null
-  register: notification_send_result
-  failed_when: notification_send_result.rc != 0
 
 - name: "Setup wise healthcheck cron job"
   cron:
@@ -65,7 +44,6 @@
     project_src: /opt/wise/test/healthcheck/host-logs
     files: 
       - docker-compose.yml
-      - "docker-compose.{{ wise_environment_type }}.yml"
     nocache: yes
     recreate: always
     restarted: yes

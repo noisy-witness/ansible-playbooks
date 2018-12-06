@@ -1,0 +1,5 @@
+
+- name: Deploy and run healthcheck
+  import_tasks: healthcheck.yml
+  tags:
+    - healthcheck

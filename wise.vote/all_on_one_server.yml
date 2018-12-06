@@ -17,8 +17,6 @@
     - proxy
     - sql
     #- hub
-    #- voting-page
-    #- manual
-    #- healthcheck
     - voting-page
     - manual
+    - healthcheck
