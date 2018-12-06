@@ -9,8 +9,12 @@
     version={{ checkout_branch }}
     force=yes
 
-- name: Copy static site to nginx html dir
-  shell: |
-    mkdir -p /opt/wise/proxy/html/voting-page/
-    cp -R /opt/wise/voting-page/* /opt/wise/proxy/html/voting-page/
-  become: yes
+- name: Build voting-page container
+  docker_service:
+    project_src: /opt/wise/voting-page
+    files: 
+      - docker-compose.yml
+    build: yes
+    nocache: yes
+    recreate: always
+    restarted: yes

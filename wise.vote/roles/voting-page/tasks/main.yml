@@ -1,0 +1,5 @@
+
+- name: Deploy voting-page
+  import_tasks: voting-page.yml
+  tags:
+    - voting-page
