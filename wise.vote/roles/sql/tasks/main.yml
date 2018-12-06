@@ -1,0 +1,12 @@
+
+- name: Deploy wiseSQL
+  import_tasks: sql.yml
+  tags:
+    - sql
+
+- name: Deploy wiseSQL
+  import_tasks: sql-backup.yml
+  tags:
+    - sql
+    - sql-backup
+    - backup
