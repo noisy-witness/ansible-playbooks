@@ -1,2 +1,7 @@
 ---
 slack_webhook_url: "{{ vault_slack_webhook_url }}"
+certbot_email: jedrzejblew@gmail.com
+cert_domains: dev.wise.jblew.pl docs.dev.wise.jblew.pl sql.dev.wise.jblew.pl
+root_domain: dev.wise.jblew.pl
+logspout_cmd: multiline+syslog+tcp://logs-01.loggly.com:514
+logspout_syslog_structured_data: "{{ loggly_apikey }}@41058 tag=\"staging\""

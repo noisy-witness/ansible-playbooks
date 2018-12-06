@@ -1,2 +1,7 @@
 ---
 slack_webhook_url: "{{ vault_slack_webhook_url }}"
+certbot_email: noisy.pl@gmail.com
+cert_domains: wise.vote docs.wise.vote sql.wise.vote
+root_domain: wise.vote
+logspout_cmd: multiline+syslog+tcp://logs-01.loggly.com:514
+logspout_syslog_structured_data: "{{ loggly_apikey }}@41058 tag=\"production\""

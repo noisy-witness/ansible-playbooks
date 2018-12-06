@@ -1,4 +1,3 @@
 ---
 loggly_apikey: "{{ vault_loggly_apikey }}"
-logspout_cmd: multiline+syslog+tcp://logs-01.loggly.com:514
-logspout_syslog_structured_data: "{{ loggly_apikey }}@41058 tag=\"jblew_local\""
+cron_log_path: /var/log/wise-cron.log
