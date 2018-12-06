@@ -1,0 +1,39 @@
+---
+- name: Clone Wise Proxy repository
+  become: yes
+  git:
+    #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/wise-proxy.git"'
+    repo="https://github.com/wise-team/wise-proxy.git"
+    dest="/opt/wise/proxy"
+    accept_hostkey=yes
+    version={{ checkout_branch }}
+    force=yes
+
+- name: Configure proxy server
+  become: yes
+  copy:
+    content: |
+      WISE_ENVIRONMENT_TYPE={{ wise_environment_type }}
+      CERTBOT_EMAIL={{ certbot_email }}
+      CERT_DOMAINS={{ cert_domains }}
+      CERTBOT_PATH=/opt/wise/certbot
+      ROOT_DOMAIN={{ root_domain }}
+    dest: /opt/wise/proxy/.env
+
+- name: Generate certs
+  command: /opt/wise/proxy/scripts/generate-certs.sh
+  args:
+    stdin: ""
+    creates: /opt/wise/certbot/letsencrypt_etc
+
+- name: Setup cron job for cert renewal
+  become: "yes"
+  cron:
+    name: "Renew TLS certificate"
+    weekday: 2
+    job: "/usr/bin/env sh -c \"echo \\\"Renew TLS certificate\\\" && /opt/wise/proxy/scripts/renew-certs.sh && echo \\\"TLS certificate renew done\\\" >> /var/log/wise-cron.log 2>&1 \""
+
+- name: Run wise proxy
+  command: /opt/wise/proxy/run.sh
+  register: res
+  failed_when: res.rc != 0
