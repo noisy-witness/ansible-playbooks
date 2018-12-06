@@ -9,9 +9,12 @@
     version={{ checkout_branch }}
     force=yes
 
-- name: Copy static site to nginx html dir
-  shell: |
-    mkdir -p /opt/wise/proxy/html/manual/
-    cp -R /opt/wise/manual/_site/* /opt/wise/proxy/html/manual/
-  become: yes
-
+- name: Build wiseManual container
+  docker_service:
+    project_src: /opt/wise/manual
+    files: 
+      - docker-compose.yml
+    build: yes
+    nocache: yes
+    recreate: always
+    restarted: yes

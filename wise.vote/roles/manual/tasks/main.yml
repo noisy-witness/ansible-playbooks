@@ -1,0 +1,5 @@
+
+- name: Deploy wiseManual
+  import_tasks: manual.yml
+  tags:
+    - manual
