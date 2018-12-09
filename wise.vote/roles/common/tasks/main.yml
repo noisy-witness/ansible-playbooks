@@ -14,3 +14,9 @@
   tags:
     - log
     - common
+
+- name: Install wise vault cert
+  import_tasks: install-vault-cert.yml
+  tags:
+    - common
+    - vault

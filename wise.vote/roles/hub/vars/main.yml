@@ -1,0 +1,13 @@
+#§ 'api_vault_role_name: ' + data.config.hub.docker.services.api.appRole.role
+api_vault_role_name: wise-hub-api
+#§ 'secretname_api_role_id: ' + data.config.hub.docker.services.api.secrets.appRoleId
+secretname_api_role_id: hub-api-approle-id
+#§ 'secretname_api_role_secret: ' + data.config.hub.docker.services.api.secrets.appRoleSecret
+secretname_api_role_secret: hub-api-approle-secret
+
+#§ 'publisher_vault_role_name: ' + data.config.hub.docker.services.publisher.appRole.role
+publisher_vault_role_name: wise-hub-publisher
+#§ 'secretname_publisher_role_id: ' + data.config.hub.docker.services.publisher.secrets.appRoleId
+secretname_publisher_role_id: hub-publisher-approle-id
+#§ 'secretname_publisher_role_secret: ' + data.config.hub.docker.services.publisher.secrets.appRoleSecret
+secretname_publisher_role_secret: hub-publisher-approle-secret

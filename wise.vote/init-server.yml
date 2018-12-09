@@ -38,6 +38,7 @@
         - docker-ce
         - docker-compose
         - unzip
+        - openssl
         - jq
 
     - name: Appending the group 'docker' to the user's groups
@@ -51,3 +52,4 @@
     - name: Init docker swarm
       become: yes
       shell: docker swarm init
+

@@ -5,9 +5,17 @@
     - name: "deploying_user"
       prompt: "user"
       private: no
-      
+
     - name: ansible_become_pass
       prompt: "sudo password"
+      private: yes
+
+    - name: "vault_approle_provisioner_username"
+      prompt: "Vault AppRole provisioner username"
+      private: no
+
+    - name: "vault_approle_provisioner_password"
+      prompt: "Vault AppRole provisioner password"
       private: yes
 
   remote_user: "{{deploying_user}}"
@@ -16,7 +24,7 @@
     - common
     - proxy
     - sql
-    #- hub
+    - hub
     - voting-page
     - manual
     - healthcheck

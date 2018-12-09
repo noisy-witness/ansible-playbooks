@@ -1,0 +1,149 @@
+---
+- name: Login to Vault
+  uri:
+    url: "{{ vault_url }}/v1/auth/userpass/login/{{ vault_approle_provisioner_username }}"
+    method: POST
+    body: "{\"password\":\"{{ vault_approle_provisioner_password }}\"}"
+    status_code: 200
+    return_content: yes
+    body_format: json
+    validate_certs: false
+  register: login_result
+
+- name: "Extract auth token"
+  set_fact: auth_token={{ login_result.json.auth.client_token }}
+
+- name: Generate new role id's
+  set_fact:
+    approles:
+      - { 
+          role_name: "{{ api_vault_role_name }}",
+          role_id: "{{ lookup('pipe','openssl rand -base64 40') }}",
+          role_id_secretname: "{{ secretname_api_role_id }}",
+          secret_id_secretname: "{{ secretname_api_role_secret }}"
+        }
+      - { 
+          role_name: "{{ publisher_vault_role_name }}",
+          role_id: "{{ lookup('pipe','openssl rand -base64 41') }}",
+          role_id_secretname: "{{ secretname_publisher_role_id }}",
+          secret_id_secretname: "{{ secretname_publisher_role_secret }}"
+        }
+      # The lengths are different to prevent ansible lookup caching
+  
+#- name: Login to Vault
+#  shell: |
+#    curl -k -s -S --fail -X POST -d @- {{ vault_url }}/v1/auth/userpass/login/{{ vault_approle_provisioner_username }} | jq --raw-output .auth.client_token
+#  args:
+#    stdin: "{\"password\":\"{{ vault_approle_provisioner_password }}\"}"
+#  register: login_result
+#  # no_log: true // TODO_COMMIT
+  
+#- name: Generate new role-id
+#  command: 
+#  register: "new_role_id_out"
+#  with_items:
+#    - { role_name: "{{ api_vault_role_name }}" }
+#    - { role_name: "{{ publisher_vault_role_name }}" }
+
+- name: Update role-id
+  uri:
+    url: "{{ vault_url }}/v1/auth/approle/role/{{ item.role_name }}/role-id"
+    method: POST
+    headers:
+      X-Vault-Token: "{{ auth_token }}"
+    body: "{\"role_name\":\"{{ item.role_name }}\",\"role_id\":\"{{ item.role_id }}\"}"
+    body_format: json
+    status_code: 204
+    return_content: yes
+    validate_certs: false
+  with_items: "{{ approles }}"
+
+- name: Provision role-id secret
+  shell: |
+    docker secret rm {{ item.role_id_secretname }} || echo "Tried to rm previous secret, but it not existed. The above error is all ok."
+    printf "{{ item.role_id }}" | docker secret create {{ item.role_id_secretname }} -
+  with_items: "{{ approles }}"
+
+#- name: Update and provision WiseHUB role_id
+#  shell: |
+#    API_ROLE_ID=$(openssl rand -base64 40)
+
+#    curl -k --header "X-Vault-Token: {{ login_result.stdout }}" -s -S --fail \
+#      --request POST --data "{\"role_name\":\"{{ item.role_name }}\",\"role_id\":\"${API_ROLE_ID}\"}" \
+#      {{ vault_url }}/v1/auth/approle/role/{{ item.role_name }}/role-id
+
+#    docker secret rm {{ item.role_id_secretname }} || echo "Tried to rm previous secret, but it not existed. The above error is all ok."
+#    printf "${API_ROLE_ID}" | docker secret create {{ item.role_id_secretname }} -
+#  with_items:
+#    - { role_name: "{{ api_vault_role_name }}", role_id_secretname: "{{ secretname_api_role_id }}" }
+#    - { role_name: "{{ publisher_vault_role_name }}", role_id_secretname: "{{ secretname_publisher_role_id }}" }
+
+- name: Generate new secret-id for wise-hub-api
+  uri:
+    url: "{{ vault_url }}/v1/auth/approle/role/{{ api_vault_role_name }}/secret-id"
+    method: POST
+    headers:
+      X-Vault-Token: "{{ auth_token }}"
+    body: { role_name: "{{ api_vault_role_name }}", metadata: "{\"when\":\"ansible_secret_provision\"}" }
+    body_format: json
+    status_code: 200
+    return_content: yes
+    validate_certs: false
+  register: api_secret_id_result
+
+- name: Provision secret-id for wise-hub-api
+  shell: |
+    docker secret rm {{ secretname_api_role_secret }} || echo "Tried to rm previous secret, but it not existed. The above error is all ok."
+    printf "{{ api_secret_id_result.json.data.secret_id }}" | docker secret create {{ secretname_api_role_secret }} -
+
+- name: Generate new secret-id for wise-hub-publisher
+  uri:
+    url: "{{ vault_url }}/v1/auth/approle/role/{{ publisher_vault_role_name }}/secret-id"
+    method: POST
+    headers:
+      X-Vault-Token: "{{ auth_token }}"
+    body: { role_name: "{{ publisher_vault_role_name }}", metadata: "{\"when\":\"ansible_secret_provision\"}" }
+    body_format: json
+    status_code: 200
+    return_content: yes
+    validate_certs: false
+  register: publisher_secret_id_result
+
+- name: Provision secret-id for wise-hub-publisher
+  shell: |
+    docker secret rm {{ secretname_publisher_role_secret }} || echo "Tried to rm previous secret, but it not existed. The above error is all ok."
+    printf "{{ publisher_secret_id_result.json.data.secret_id }}" | docker secret create {{ secretname_publisher_role_secret }} -
+
+
+#- name: Destroy all previous secret-ids
+#  shell: |
+#    curl -k -v -S --fail --request LIST \
+#      {{ vault_url }}/v1/auth/approle/role/{{ item.role_name }}/secret-id
+
+#    PREV_SECRET_IDS_LIST=$(curl -k -s -S --fail --request LIST \
+#      {{ vault_url }}/v1/auth/approle/role/{{ item.role_name }}/secret-id | jq --raw-output '.data.keys[]')
+
+#    while read -r SECRETID; do
+#      curl -k --header "X-Vault-Token: {{ login_result.stdout }}" -s -S --fail \
+#        --request POST --data "{\"role_name\":\"{{ item.role_name }}\",\"secret_id\":\"${SECRETID}\"}" \
+#        {{ vault_url }}/v1/auth/approle/role/{{ item.role_name }}/secret-id/destroy
+#    done <<< "${PREV_SECRET_IDS_LIST}"
+#  args:
+#    executable: /bin/bash
+#  with_items:
+#    - { role_name: "{{ api_vault_role_name }}" }
+#    - { role_name: "{{ publisher_vault_role_name }}" }
+
+#- name: Generate and provision new secret-id
+#  shell: |
+#    SECRET_ID=$(curl -k --header "X-Vault-Token: {{ login_result.stdout }}" -s -S --fail \
+#      --request POST --data "{\"role_name\":\"{{ item.role_name }}\",\"metadata\":\"{\\"when\\":\\"ansible_secret_provision\\"}\"}" \
+#      {{ vault_url }}/v1/auth/approle/role/{{ item.role_name }}/secret-id | jq --raw-output .data.secret_id)
+    
+#    docker secret rm {{ item.secret_id_secretname }} || echo "Tried to rm previous secret, but it did not exist. The above error is all ok."
+#    printf "${SECRET_ID}" | docker secret create {{ item.secret_id_secretname }} -
+#  with_items:
+#    - { role_name: "{{ api_vault_role_name }}", secret_id_secretname: "{{ secretname_api_role_secret }}" }
+#    - { role_name: "{{ publisher_vault_role_name }}", secret_id_secretname: "{{ secretname_publisher_role_secret }}" }
+
+

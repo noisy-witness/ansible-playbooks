@@ -8,8 +8,31 @@
     accept_hostkey=yes
     version={{ checkout_branch }}
     force=yes
+  tags:
+    - hub_backend
+    - hub_frontend
 
-    // TODO: vault revoke by hash
+- name: Build backend
+  command: /opt/wise/hub/backend/build.sh
+  register: backend_build_script_result
+  failed_when: ( backend_build_script_result.rc not in [ 0 ] )
+  tags:
+    - hub_backend
+
+- name: Build frontend
+  command: /opt/wise/hub/wise-hub-frontend/scripts/build-with-docker.sh
+  register: frontend_build_script_result
+  failed_when: ( frontend_build_script_result.rc not in [ 0 ] )
+  tags:
+    - hub_frontend
+
+- name: Deploy wise hub stack
+  command: /opt/wise/hub/scripts/deploy-{{ wise_environment_type }}.sh
+  register: deploy_script_result
+  failed_when: ( deploy_script_result.rc not in [ 0 ] )
+  tags:
+    - hub_backend
+    - hub_frontend
 
 #- name: Ask for vault username
 #  pause:
