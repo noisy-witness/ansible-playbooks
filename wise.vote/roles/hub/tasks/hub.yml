@@ -26,6 +26,20 @@
   tags:
     - hub_frontend
 
+- name: Undeploy old stack
+  command: /opt/wise/hub/scripts/undeploy.sh
+  register: undeploy_script_result
+  failed_when: ( undeploy_script_result.rc not in [ 0 ] )
+  tags:
+    - hub_backend
+    - hub_frontend
+
+- name: Wait for undeployment
+  command: sleep 15
+  tags:
+    - hub_backend
+    - hub_frontend
+
 - name: Deploy wise hub stack
   command: /opt/wise/hub/scripts/deploy-{{ wise_environment_type }}.sh
   register: deploy_script_result
