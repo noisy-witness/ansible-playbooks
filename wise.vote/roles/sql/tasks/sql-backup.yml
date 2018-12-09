@@ -18,7 +18,7 @@
     job: "/opt/wise/sql/scripts/db-local-backup.sh >> /home/jblew/cron.log 2>&1"
 
 - set_fact: volume_to_backup=sql_pgdata
-- set_fact: volume_backup_path="{{ backup_dir }}/hub/volume-{{ volume_to_backup }}-{{ ansible_date_time.iso8601_basic }}.tar.bz2"
+- set_fact: volume_backup_path="{{ backup_dir }}/sql/volume-{{ volume_to_backup }}-{{ ansible_date_time.iso8601_basic }}.tar.bz2"
 
 - name: Backup SQL volume
   become: yes
