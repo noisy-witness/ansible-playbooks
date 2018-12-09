@@ -4,7 +4,7 @@
   tags:
     - sql
 
-- name: Deploy wiseSQL
+- name: Backup wiseSQL
   import_tasks: sql-backup.yml
   tags:
     - sql

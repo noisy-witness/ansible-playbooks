@@ -1,3 +1,5 @@
 ---
 loggly_apikey: "{{ vault_loggly_apikey }}"
 cron_log_path: /var/log/wise-cron.log
+scripts_path: /var/deploy/scripts
+backup_dir: /backup/wise

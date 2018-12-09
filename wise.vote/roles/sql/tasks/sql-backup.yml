@@ -16,3 +16,18 @@
     minute: "*"
     hour: "*/6"
     job: "/opt/wise/sql/scripts/db-local-backup.sh >> /home/jblew/cron.log 2>&1"
+
+- set_fact: volume_to_backup=sql_pgdata
+- set_fact: volume_backup_path="{{ backup_dir }}/hub/volume-{{ volume_to_backup }}-{{ ansible_date_time.iso8601_basic }}.tar.bz2"
+
+- name: Backup SQL volume
+  become: yes
+  command: "{{ scripts_path }}/backup-volume.sh"
+  environment:
+   SOURCE_VOLUME: "{{ volume_to_backup }}"
+   TARGET_BACKUP_BZ2_FILE: "{{ volume_backup_path }}"
+
+- name: "Download volume backup locally"
+  fetch:
+    dest: "../backup/"
+    src: "{{ volume_backup_path }}"

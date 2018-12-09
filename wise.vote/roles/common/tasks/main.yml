@@ -1,10 +1,23 @@
+- name: Ensure deployment scripts directory {{ scripts_path }}
+  become: yes
+  file: state=directory path={{ scripts_path }}
+  tags:
+    - common
+    - scripts
 
-- name: "Setup cron job for docker system prune"
-  become: "yes"
+- name: Copy deployment scripts to {{ scripts_path }}
+  become: yes
+  copy: src=scripts dest={{ scripts_path | dirname }} mode=u+rwx,g+rwx,o+rwx
+  tags:
+    - common
+    - scripts
+
+- name: Setup cron job for docker system prune
+  become: yes
   cron:
     name: "Docker system prune -f"
-    hour: "*/12"
-    job: "/usr/bin/env sh -c \"echo \\\"Running docker system prune...\\\" && docker system prune -f && echo \\\"Docker system prune done\\\" >> {{ cron_log_path }} 2>&1 \""
+    hour: "*/24"
+    job: "{{ scripts_path }}/wrap-cron.sh docker system prune -f"
   tags:
     - clean
     - common

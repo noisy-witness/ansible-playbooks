@@ -20,4 +20,9 @@
     - hub
     - hub-onlydeploy
 
-
+- name: Backup wise hub
+  import_tasks: backup.yml
+  tags:
+    - hub
+    - hub-backup
+    - backup
