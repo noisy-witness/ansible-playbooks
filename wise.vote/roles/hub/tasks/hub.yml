@@ -40,6 +40,21 @@
     - hub_backend
     - hub_frontend
 
+- name: Provision AppRole secrets for wise hub
+  import_tasks: provision-approle.yml
+  #vars:
+  #  vault_approle_provisioner_username: "{{ vault_approle_provisioner_username }}"
+  #  vault_approle_provisioner_password: "{{ vault_approle_provisioner_password }}"
+  #  role_name: "{{ item.role_name }}"
+  #  role_id_secretname: "{{ secretname_api_role_id }}"
+  #  secret_id_secretname: "{{ secretname_api_role_secret }}"
+  #with_items:
+  #  - { role_name: "{{ api_vault_role_name }}", role_id_secretname: "{{ secretname_api_role_id }}", secret_id_secretname: "{{ secretname_api_role_secret }}" }
+  #  - { role_name: "{{ publisher_vault_role_name }}", role_id_secretname: "{{ secretname_publisher_role_id }}", secret_id_secretname: "{{ secretname_publisher_role_secret }}" }
+  tags:
+    - hub
+    - hub-provision-secrets
+
 - name: Deploy wise hub stack
   command: /opt/wise/hub/scripts/deploy-{{ wise_environment_type }}.sh
   register: deploy_script_result
