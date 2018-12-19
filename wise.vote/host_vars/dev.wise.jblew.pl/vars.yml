@@ -5,4 +5,4 @@ cert_domains: dev.wise.jblew.pl docs.dev.wise.jblew.pl sql.dev.wise.jblew.pl hub
 root_domain: dev.wise.jblew.pl
 logspout_cmd: multiline+syslog+tcp://logs-01.loggly.com:514
 logspout_syslog_structured_data: "{{ loggly_apikey }}@41058 tag=\"staging\""
-vault_url: https://vault.wise.vote:8200
+vault_url: https://vault.dev.wise.vote:8200
