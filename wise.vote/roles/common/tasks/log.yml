@@ -1,14 +1,24 @@
 ---
-- name: Setup remote logging from all docker containers
+#- name: Setup remote logging from all docker containers
+#  docker_container:
+#    name: logspout
+#    image: gliderlabs/logspout
+#    command: multiline+syslog+tcp://logs-01.loggly.com:514
+#    detach: true
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    env:
+#      SYSLOG_STRUCTURED_DATA: "{{ logspout_syslog_structured_data }}"
+#    restart_policy: always
+
+- name: Setup remote logging from all docker containers in logzio
   docker_container:
-    name: logspout
-    image: gliderlabs/logspout
-    command: multiline+syslog+tcp://logs-01.loggly.com:514
+    name: logzio
+    image: logzio/logzio-docker
+    command: "-t {{ logzio_token }} -a {{ wise_environment_type }}"
     detach: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    env:
-      SYSLOG_STRUCTURED_DATA: "{{ logspout_syslog_structured_data }}"
     restart_policy: always
-
-# TODO: fix 'x509: certificate signed by unknown authority' https://www.loggly.com/docs/upgrade-tls-certificate/ and enable tls
+  tags:
+    - remote_logs
