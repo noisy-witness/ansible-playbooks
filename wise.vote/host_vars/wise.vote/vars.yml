@@ -1,5 +1,6 @@
 ---
 slack_webhook_url: "{{ vault_slack_webhook_url }}"
+monitoring_notifications_slack_mentions: "<@UAEGKTY3T> <@UASN9CGJ0> "
 certbot_email: noisy.pl@gmail.com
 cert_domains: wise.vote docs.wise.vote sql.wise.vote hub.wise.vote test.wise.vote
 root_domain: wise.vote

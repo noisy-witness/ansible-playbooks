@@ -1,0 +1,24 @@
+
+
+- name: Build backend
+  command: /opt/wise/hub/backend/build.sh
+  register: backend_build_script_result
+  failed_when: ( backend_build_script_result.rc not in [ 0 ] )
+
+- name: Undeploy old stack
+  command: /opt/wise/hub/scripts/undeploy.sh
+  register: undeploy_script_result
+  failed_when: ( undeploy_script_result.rc not in [ 0 ] )
+
+- name: Wait for undeployment
+  command: sleep 15
+
+- name: Provision AppRole secrets for wise hub
+  import_tasks: provision-approle.yml
+  tags:
+    - hub-provision-secrets
+
+- name: Deploy wise hub stack
+  command: /opt/wise/hub/scripts/deploy-{{ wise_environment_type }}.sh
+  register: deploy_script_result
+  failed_when: ( deploy_script_result.rc not in [ 0 ] )

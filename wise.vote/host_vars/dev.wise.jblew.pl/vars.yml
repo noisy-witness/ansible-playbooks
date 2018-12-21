@@ -1,5 +1,6 @@
 ---
 slack_webhook_url: "{{ vault_slack_webhook_url }}"
+monitoring_notifications_slack_mentions: ""
 certbot_email: jedrzejblew@gmail.com
 cert_domains: dev.wise.jblew.pl docs.dev.wise.jblew.pl sql.dev.wise.jblew.pl hub.dev.wise.jblew.pl test.dev.wise.jblew.pl
 root_domain: dev.wise.jblew.pl

@@ -1,0 +1,11 @@
+---
+- name: "Setup hub monitoring task with cron"
+  cron:
+    name: "Wise HUB monitoring"
+    minute: "*/5"
+    job: >-
+      SLACK_WEBHOOK_URL="{{ slack_webhook_url }}"
+      WISE_ENVIRONMENT_TYPE="{{ wise_environment_type }}"
+      SLACK_MENTIONS="{{ monitoring_notifications_slack_mentions }} "
+      WISE_HUB_URL="https://{{ root_domain }}"
+      /opt/wise/hub/monitoring/run-monitor-in-docker.sh >> /home/jblew/cron.log 2>&1

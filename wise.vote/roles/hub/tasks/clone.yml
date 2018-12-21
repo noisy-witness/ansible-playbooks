@@ -1,0 +1,12 @@
+---
+- name: Clone wiseHUB repository
+  become: yes
+  git:
+    #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/wise-hub.git"'
+    repo="https://github.com/wise-team/wise-hub.git"
+    dest="/opt/wise/hub"
+    accept_hostkey=yes
+    version={{ checkout_branch }}
+    force=yes
+  tags:
+    - hub-clone

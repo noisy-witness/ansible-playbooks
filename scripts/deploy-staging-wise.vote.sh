@@ -6,5 +6,5 @@ cd "${DIR}"
 ansible-playbook -i wise.vote/staging.yml \
     --extra-vars "@~/p/ansible/staging.yml" \
     --vault-id jblew_staging@prompt \
-    --vault-id generic@prompt -vvv wise.vote/wise.vote.yml \
-    --tags "$@"
+    --vault-id generic@prompt -vv wise.vote/wise.vote.yml \
+    $@
