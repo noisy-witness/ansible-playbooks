@@ -33,8 +33,8 @@ cat CA_Intermediary.crt CA.crt > CA_Intermediary.bundle.crt
 
 # Generate server cert
 SERVER_CERT_SUBJECT="${CA_SUBJECT}"
-SERVER_CERT_CN="vault.dev.wise.vote"
-SERVER_CERT_SUBJECTALTNAMES="DNS:vault.dev.wise.vote"
+SERVER_CERT_CN="vault.staging.wise.vote"
+SERVER_CERT_SUBJECTALTNAMES="DNS:vault.staging.wise.vote"
 cat > "certgen.conf" <<- EOM
 [ req ]
 default_bits = 2048
@@ -45,7 +45,7 @@ distinguished_name = dn
 req_extensions = req_ext
 
 [ dn ]
-CN = vault.dev.wise.vote
+CN = vault.staging.wise.vote
 emailAddress = ssl@example.com
 O = Wise Team
 OU = Wise
@@ -54,7 +54,7 @@ ST = Dolnoslaskie
 C = PL
 
 [ req_ext ]
-subjectAltName = DNS: vault.dev.wise.vote, IP: 51.38.133.176, IP: 2001:41d0:0601:1100:0000:0000:0000:24cd
+subjectAltName = DNS: vault.staging.wise.vote, IP: 51.38.133.176, IP: 2001:41d0:0601:1100:0000:0000:0000:24cd
 EOM
 
 openssl genrsa -out privateKey.key 2048

@@ -4,8 +4,8 @@ set +x
 
 # staging conf:
 WISE_ENVIRONMENT_TYPE=staging
-VAULT_DOMAIN="vault.dev.wise.vote"
-VAULT_SUBJECT_TEXT="/subjectAltName=DNS:localhost,DNS:vault.dev.wise.vote,IP:0.0.0.0,IP:127.0.0.1,IP:51.38.133.176,IP:2001:41d0:0601:1100:0000:0000:0000:24cd"
+VAULT_DOMAIN="vault.staging.wise.vote"
+VAULT_SUBJECT_TEXT="/subjectAltName=DNS:localhost,DNS:vault.staging.wise.vote,IP:0.0.0.0,IP:127.0.0.1,IP:51.38.133.176,IP:2001:41d0:0601:1100:0000:0000:0000:24cd"
 # /subjectAltName=DNS.1=axway.lab,DNS.2=your-alt-name
 
 DIR="/etc/vault/cert"
@@ -21,7 +21,7 @@ cd "${DIR}"
 
 cat > "${DIR}/certgen.staging.conf" <<- EOM
 [dn]
-CN=vault.dev.wise.vote
+CN=vault.staging.wise.vote
 [req]
 distinguished_name = dn
 [EXT]
@@ -30,7 +30,7 @@ keyUsage=digitalSignature
 extendedKeyUsage=serverAuth
 [alt_names]
 DNS.1 = localhost
-DNS.2 = vault.dev.wise.vote
+DNS.2 = vault.staging.wise.vote
 IP.1  = 0.0.0.0
 IP.2  = 127.0.0.1
 IP.3  = 51.38.133.176
