@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "${DIR}"
 set -e # fail on first error
 set -x
 
+# Configuration
+VAULT_DOMAIN="vault.staging.wise.vote"
+VAULT_IPV4="51.38.133.176"
+VAULT_IPV6="2001:41d0:0601:1100:0000:0000:0000:24cd"
+CERT_EMAIL="contact@wiseteam.io"
 
 # Generate CA
 CA_SUBJECT="/C=PL/ST=DOLNOSLASKIE/L=OLAWA/O=Wise Team"
@@ -31,11 +37,8 @@ cat CA_Intermediary.crt CA.crt > CA_Intermediary.bundle.crt
 
 
 
-# Generate server cert
-SERVER_CERT_SUBJECT="${CA_SUBJECT}"
-SERVER_CERT_CN="vault.staging.wise.vote"
-SERVER_CERT_SUBJECTALTNAMES="DNS:vault.staging.wise.vote"
-cat > "certgen.conf" <<- EOM
+# Generate server cert'
+echo "
 [ req ]
 default_bits = 2048
 prompt = no
@@ -45,8 +48,8 @@ distinguished_name = dn
 req_extensions = req_ext
 
 [ dn ]
-CN = vault.staging.wise.vote
-emailAddress = ssl@example.com
+CN = ${VAULT_DOMAIN}
+emailAddress = ${CERT_EMAIL}
 O = Wise Team
 OU = Wise
 L = Olawa
@@ -54,12 +57,11 @@ ST = Dolnoslaskie
 C = PL
 
 [ req_ext ]
-subjectAltName = DNS: vault.staging.wise.vote, IP: 51.38.133.176, IP: 2001:41d0:0601:1100:0000:0000:0000:24cd
-EOM
+subjectAltName = DNS: ${VAULT_DOMAIN}, IP: ${VAULT_IPV4}, IP: ${VAULT_IPV6}
+" > certgen.conf
 
 openssl genrsa -out privateKey.key 2048
 
-#openssl req -new -sha256 -key privateKey.key -out certificate_sr.csr -subj "${SERVER_CERT_SUBJECT}/subjectAltName=${SERVER_CERT_SUBJECTALTNAMES}"
 openssl req -new -sha256 -key privateKey.key -out certificate_sr.csr -config certgen.conf
 
 openssl x509 -req -in certificate_sr.csr -CA CA_Intermediary.crt -CAkey CA_Intermediary.key -CAcreateserial -out certificate.crt -days 3650 -sha256 \
@@ -70,3 +72,9 @@ cat certificate.crt CA_Intermediary.bundle.crt > certificate.bundle.crt
 
 chmod -R 750 "${DIR}"
 chown -R vault:vault "${DIR}"
+
+PUB_CERT_DIR="/pub_cert"
+mkdir -p "${PUB_CERT_DIR}"
+rm -rf "${PUB_CERT_DIR}/*"
+cp CA.crt CA.pem CA_Intermediary.crt CA_Intermediary.bundle.crt certificate.crt certificate.bundle.crt "${PUB_CERT_DIR}"
+chmod -R 0777 "${PUB_CERT_DIR}"
