@@ -1,0 +1,14 @@
+- name: Ensure local certs directory exists
+  become: yes
+  file: state=directory path=/usr/share/ca-certificates
+
+- name: Install wise-vault cert .crt to ca-certificates
+  become: yes
+  copy:
+    src: "vault_certs/vault.{{ root_domain }}/CA.crt"
+    dest: /usr/share/ca-certificates/VaultWiseVoteCA_{{ wise_environment_type }}.crt
+    mode: 644
+
+- name: Update cert index
+  become: yes
+  shell: /usr/sbin/update-ca-certificates --verbose

@@ -29,7 +29,7 @@
     - common
 
 - name: Install wise vault cert
-  import_tasks: install-vault-cert.yml
+  import_tasks: install-vault-certs.yml
   tags:
     - common
     - vault
