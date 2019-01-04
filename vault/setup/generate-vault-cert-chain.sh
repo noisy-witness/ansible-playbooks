@@ -4,11 +4,20 @@ cd "${DIR}"
 set -e # fail on first error
 set -x
 
-# Configuration
-VAULT_DOMAIN="vault.staging.wise.vote"
-VAULT_IPV4="51.38.133.176"
-VAULT_IPV6="2001:41d0:0601:1100:0000:0000:0000:24cd"
+# Configuration for staging
+# VAULT_DOMAIN="vault.staging.wise.vote"
+# VAULT_IPV4="51.38.133.176"
+# VAULT_IPV6="2001:41d0:0601:1100:0000:0000:0000:24cd"
+# CERT_EMAIL="contact@wiseteam.io"
+# CN_MOD=""
+
+# Configuration for production
+VAULT_DOMAIN="vault.wise.vote"
+VAULT_IPV4="51.38.98.112"
+VAULT_IPV6="2001:41d0:0701:1100:0000:0000:0000:1381"
 CERT_EMAIL="contact@wiseteam.io"
+CN_MOD="_staging"
+
 
 # Source: https://jamielinux.com/docs/openssl-certificate-authority/appendix/root-configuration-file.html
 CA_DIR="${DIR}/ca"
@@ -17,6 +26,7 @@ mkdir -p "${CA_DIR}/crl"
 mkdir -p "${CA_DIR}/newcerts"
 mkdir -p "${CA_DIR}/private"
 touch "${CA_DIR}/index.txt"
+echo "unique_subject = yes/no" > "${CA_DIR}/index.txt.attr"
 echo 1000 > "${CA_DIR}/serial"
 
 echo "
@@ -160,7 +170,7 @@ extendedKeyUsage = critical, OCSPSigning
 
 # Generate CA
 CA_SUBJECT="/C=PL/ST=DOLNOSLASKIE/L=OLAWA/O=Wise Team/emailAddress=${CERT_EMAIL}"
-CA_CN="WiseVaultCA"
+CA_CN="WiseVaultCA${CN_MOD}"
 
 openssl genrsa -out CA.key 2048
 #openssl req -new -sha256 -key CA.key -out CA.csr -config openssl.conf -extensions v3_ca \
@@ -181,7 +191,7 @@ openssl x509 -outform pem -in CA.pem -out CA.crt -sha256
 
 # Generate intermediary CA
 INTERMEDIARY_CA_SUBJECT="${CA_SUBJECT}"
-INTERMEDIARY_CA_CN="WiseVaultIntermediaryCA"
+INTERMEDIARY_CA_CN="WiseVaultIntermediaryCA${CN_MOD}"
 
 INTERMEDIARY_CA_DIR="${CA_DIR}/intermediate"
 mkdir -p "${INTERMEDIARY_CA_DIR}"
@@ -190,6 +200,7 @@ mkdir -p "${INTERMEDIARY_CA_DIR}/crl"
 mkdir -p "${INTERMEDIARY_CA_DIR}/newcerts"
 mkdir -p "${INTERMEDIARY_CA_DIR}/private"
 touch "${INTERMEDIARY_CA_DIR}/index.txt"
+echo "unique_subject = yes/no" > "${INTERMEDIARY_CA_DIR}/index.txt.attr"
 echo 1000 > "${INTERMEDIARY_CA_DIR}/serial"
 echo 1000 > "${INTERMEDIARY_CA_DIR}/crlnumber"
 
@@ -261,7 +272,7 @@ ST = Dolnoslaskie
 C = PL
 
 [ req_ext ]
-subjectAltName = DNS: ${VAULT_DOMAIN}, IP: ${VAULT_IPV4}, IP: ${VAULT_IPV6}
+subjectAltName = DNS: ${VAULT_DOMAIN}, IP: ${VAULT_IPV4}, IP: ${VAULT_IPV6}, IP: 0.0.0.0, IP: 127.0.0.1, DNS: localhost
 " > certgen.conf
 
 openssl genrsa -out privateKey.key 2048
