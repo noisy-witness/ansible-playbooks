@@ -1,6 +1,6 @@
 ---
 - name: Build frontend
-  command: /opt/wise/hub/wise-hub-frontend/scripts/build-with-docker.sh
+  command: "{{ hub_path }}/wise-hub-frontend/scripts/build-with-docker.sh"
   register: frontend_build_script_result
   failed_when: ( frontend_build_script_result.rc not in [ 0 ] )
   tags:

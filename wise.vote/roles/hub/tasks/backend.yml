@@ -1,14 +1,12 @@
-
-
 - name: Build backend
-  command: /opt/wise/hub/backend/build.sh
+  command: "{{ hub_path }}/backend/build.sh"
   register: backend_build_script_result
   failed_when: ( backend_build_script_result.rc not in [ 0 ] )
   tags:
     - hub-backend-build-stack
 
 - name: Undeploy old stack
-  command: /opt/wise/hub/scripts/undeploy.sh
+  command: "{{ hub_path }}/scripts/undeploy.sh"
   register: undeploy_script_result
   failed_when: ( undeploy_script_result.rc not in [ 0 ] )
   tags:
@@ -25,7 +23,7 @@
     - hub-backend-provision-secrets
 
 - name: Deploy wise hub stack
-  command: /opt/wise/hub/scripts/deploy-{{ wise_environment_type }}.sh
+  command: "{{ hub_path }}/scripts/deploy-{{ wise_environment_type }}.sh"
   register: deploy_script_result
   failed_when: ( deploy_script_result.rc not in [ 0 ] )
   tags:

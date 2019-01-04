@@ -1,3 +1,4 @@
+hub_path: /opt/wise/hub
 #§ 'api_vault_role_name: ' + data.config.hub.docker.services.api.appRole.role
 api_vault_role_name: wise-hub-api
 #§ 'secretname_api_role_id: ' + data.config.hub.docker.services.api.secrets.appRoleId

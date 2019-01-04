@@ -1,0 +1,25 @@
+---
+- name: Copy under_maintenance.html file
+  become: yes
+  copy:
+    src: "under_maintenance.html"
+    dest: "{{ hub_path }}/under_maintenance.html"
+    mode: 0777
+
+- name: "Inform about reason and time"
+  become: yes
+  blockinfile:
+    path: "{{ hub_path }}/under_maintenance.html"
+    content: |
+      <ul type="none">
+            <li>
+                <strong>
+                    New version deployment
+                </strong>.
+            </li>
+            <li>
+                <strong><u> 15 minutes starting at {{ ansible_date_time.iso8601 }} </u></strong>.
+            </li>
+        </ul>
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    insertafter: "<!--INFO-->"

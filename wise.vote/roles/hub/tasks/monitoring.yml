@@ -8,4 +8,4 @@
       WISE_ENVIRONMENT_TYPE="{{ wise_environment_type }}"
       SLACK_MENTIONS="{{ monitoring_notifications_slack_mentions }} "
       WISE_HUB_URL="https://{{ root_domain }}"
-      /opt/wise/hub/monitoring/run-monitor-in-docker.sh >> /home/jblew/cron.log 2>&1
+      {{ hub_path }}/monitoring/run-monitor-in-docker.sh >> /home/jblew/cron.log 2>&1

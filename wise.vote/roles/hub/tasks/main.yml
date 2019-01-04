@@ -1,3 +1,10 @@
+- import_tasks: maintenance_on.yml
+  tags:
+    - hub
+    - hub-clone
+    - hub-monitoring
+    - hub-frontend
+    - hub-backend
 
 - name: Clone wise hub
   import_tasks: clone.yml
@@ -32,3 +39,11 @@
   tags:
     - hub
     - hub-monitoring
+
+- import_tasks: maintenance_off.yml
+  tags:
+    - hub
+    - hub-clone
+    - hub-monitoring
+    - hub-frontend
+    - hub-backend

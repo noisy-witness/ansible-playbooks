@@ -1,0 +1,5 @@
+- name: Turn off ansible maintenance
+  become: yes
+  file:
+    state: absent
+    path: "{{ hub_path }}/under_maintenance.html"
