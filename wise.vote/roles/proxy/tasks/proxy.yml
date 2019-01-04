@@ -9,6 +9,8 @@
     version={{ checkout_branch }}
     force=yes
 
+- set_fact: certbot_path=/opt/wise/certbot_{{ root_domain }}
+
 - name: Configure proxy server
   become: yes
   copy:
@@ -16,7 +18,7 @@
       WISE_ENVIRONMENT_TYPE={{ wise_environment_type }}
       CERTBOT_EMAIL={{ certbot_email }}
       CERT_DOMAINS={{ cert_domains }}
-      CERTBOT_PATH=/opt/wise/certbot
+      CERTBOT_PATH={{ certbot_path }}
       ROOT_DOMAIN={{ root_domain }}
     dest: /opt/wise/proxy/.env
 
@@ -25,7 +27,7 @@
   become: yes
   args:
     stdin: ""
-    creates: /opt/wise/certbot/letsencrypt_etc
+    creates: "{{ certbot_path }}/letsencrypt_etc"
 
 - name: Setup cron job for cert renewal
   become: "yes"
