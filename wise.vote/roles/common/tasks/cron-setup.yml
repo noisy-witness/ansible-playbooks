@@ -1,0 +1,6 @@
+- name: Ensure {{ cron_log_path }} has proper permissions
+  become: yes
+  file: state=file path={{ cron_log_path }} mode=u+rw,g+rw,o+rw
+  tags:
+    - common
+    - cron

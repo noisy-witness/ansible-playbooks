@@ -34,7 +34,9 @@
   cron:
     name: "Renew TLS certificate"
     weekday: 2
-    job: "/usr/bin/env sh -c \"echo \\\"Renew TLS certificate\\\" && /opt/wise/proxy/scripts/renew-certs.sh && echo \\\"TLS certificate renew done\\\" >> /var/log/wise-cron.log 2>&1 \""
+    job: >-
+      CRON_JOB_NAME="Renew TLS certificate"
+      {{ scripts_path }}/wrap-cron.sh /opt/wise/proxy/scripts/renew-certs.sh
 
 - name: Run wise proxy
   command: /opt/wise/proxy/run.sh

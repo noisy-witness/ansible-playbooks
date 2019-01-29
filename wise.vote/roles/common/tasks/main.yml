@@ -12,12 +12,20 @@
     - common
     - scripts
 
+- name: Setup cron
+  import_tasks: cron-setup.yml
+  tags:
+    - cron-setup
+    - common
+
 - name: Setup cron job for docker system prune
   become: yes
   cron:
     name: "Docker system prune -f"
     hour: "*/24"
-    job: "{{ scripts_path }}/wrap-cron.sh docker system prune -f"
+    job: >-
+      CRON_JOB_NAME="Docker system prune cron job"
+      {{ scripts_path }}/wrap-cron.sh docker system prune -f
   tags:
     - clean
     - common

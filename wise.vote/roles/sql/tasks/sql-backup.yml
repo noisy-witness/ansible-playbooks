@@ -11,11 +11,14 @@
     src: "{{ result.stdout_lines[0] }}"
 
 - name: "Setup db backup cron job"
+  become: yes
   cron:
     name: "Steem-wise-sql database backup"
     minute: "*"
     hour: "*/6"
-    job: "{{ sql_path }}/scripts/db-local-backup.sh >> {{ cron_log_path }} 2>&1"
+    job: >-
+      CRON_JOB_NAME="DB Backup cron job"
+      {{ scripts_path }}/wrap-cron.sh {{ sql_path }}/scripts/db-local-backup.sh
 
 - set_fact: volume_to_backup=sql_pgdata
 - set_fact: volume_backup_path="{{ backup_dir }}/sql/volume-{{ volume_to_backup }}-{{ ansible_date_time.iso8601_basic }}.tar.bz2"
