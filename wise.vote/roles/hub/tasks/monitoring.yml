@@ -9,4 +9,4 @@
       SLACK_MENTIONS="{{ monitoring_notifications_slack_mentions }} "
       WISE_HUB_URL="https://{{ root_domain }}"
       FAILURE_NOTIFICATION_INTERVAL_S="1800"
-      {{ hub_path }}/monitoring/run-monitoring.sh >> /home/jblew/cron.log 2>&1
+      {{ hub_path }}/monitoring/run-monitoring.sh >> {{ cron_log_path }} 2>&1

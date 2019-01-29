@@ -29,8 +29,8 @@
     name: "Steem-wise-test healthcheck"
     minute: "0"
     hour: "*"
-    job: "/opt/wise/test/healthcheck/healthcheck-run-{{ wise_environment_type }}.sh > /home/jblew/cron.log 2>&1"
-  
+    job: "/opt/wise/test/healthcheck/healthcheck-run-{{ wise_environment_type }}.sh > {{ cron_log_path }} 2>&1"
+
 - name: "Run the healthcheck immediately"
   command: "/opt/wise/test/healthcheck/healthcheck-run-{{ wise_environment_type }}.sh"
   register: immediate_healthcheck_result
@@ -42,7 +42,7 @@
 - name: Start hosted logs service
   docker_service:
     project_src: /opt/wise/test/healthcheck/host-logs
-    files: 
+    files:
       - docker-compose.yml
     nocache: yes
     recreate: always
