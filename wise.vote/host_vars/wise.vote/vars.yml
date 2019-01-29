@@ -2,8 +2,12 @@
 slack_webhook_url: "{{ vault_slack_webhook_url }}"
 monitoring_notifications_slack_mentions: "<@UAEGKTY3T> <@UASN9CGJ0> "
 certbot_email: noisy.pl@gmail.com
-cert_domains: wise.vote docs.wise.vote sql.wise.vote hub.wise.vote test.wise.vote
 root_domain: wise.vote
-logspout_cmd: multiline+syslog+tcp://logs-01.loggly.com:514
-logspout_syslog_structured_data: "{{ loggly_apikey }}@41058 tag=\"production\""
-vault_url: https://vault.wise.vote:8200
+domains:
+  root: "{{ root_domain }}"
+  docs: "docs.{{ root_domain }}"
+  sql: "sql.{{ root_domain }}"
+  old_hub: "hub.{{ root_domain }}"
+  test: "test.{{ root_domain }}"
+cert_domains: "{{ domains.root }} {{ domains.docs }} {{ domains.sql }} {{ domains.old_hub }} {{ domains.test }}"
+vault_url: "https://vault.{{ root_domain }}:8200"

@@ -3,7 +3,11 @@ slack_webhook_url: "{{ vault_slack_webhook_url }}"
 monitoring_notifications_slack_mentions: ""
 certbot_email: jedrzejblew@gmail.com
 root_domain: staging.wise.vote
-cert_domains: "{{ root_domain }} docs.{{ root_domain }} sql.{{ root_domain }} hub.{{ root_domain }} test.{{ root_domain }}"
-logspout_cmd: multiline+syslog+tcp://logs-01.loggly.com:514
-logspout_syslog_structured_data: '{{ loggly_apikey }}@41058 tag="staging"'
-vault_url: https://vault.staging.wise.vote:8200
+domains:
+  root: "{{ root_domain }}"
+  docs: "docs.{{ root_domain }}"
+  sql: "sql.{{ root_domain }}"
+  old_hub: "hub.{{ root_domain }}"
+  test: "test.{{ root_domain }}"
+cert_domains: "{{ domains.root }} {{ domains.docs }} {{ domains.sql }} {{ domains.old_hub }} {{ domains.test }}"
+vault_url: "https://vault.{{ root_domain }}:8200"
