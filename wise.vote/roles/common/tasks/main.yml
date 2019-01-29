@@ -22,6 +22,7 @@
   become: yes
   cron:
     name: "Docker system prune -f"
+    minute: 0
     hour: "*/24"
     job: >-
       CRON_JOB_NAME="Docker system prune cron job"

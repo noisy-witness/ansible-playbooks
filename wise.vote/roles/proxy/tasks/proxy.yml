@@ -33,6 +33,8 @@
   become: "yes"
   cron:
     name: "Renew TLS certificate"
+    minute: 0
+    hour: 23
     weekday: 2
     job: >-
       CRON_JOB_NAME="Renew TLS certificate"

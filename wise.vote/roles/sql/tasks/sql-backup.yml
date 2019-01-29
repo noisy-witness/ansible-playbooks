@@ -14,7 +14,7 @@
   become: yes
   cron:
     name: "Steem-wise-sql database backup"
-    minute: "*"
+    minute: 0
     hour: "*/6"
     job: >-
       CRON_JOB_NAME="DB Backup cron job"
