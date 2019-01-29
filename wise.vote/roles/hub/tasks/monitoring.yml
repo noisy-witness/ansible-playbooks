@@ -8,4 +8,5 @@
       WISE_ENVIRONMENT_TYPE="{{ wise_environment_type }}"
       SLACK_MENTIONS="{{ monitoring_notifications_slack_mentions }} "
       WISE_HUB_URL="https://{{ root_domain }}"
-      {{ hub_path }}/monitoring/run-monitor-in-docker.sh >> /home/jblew/cron.log 2>&1
+      FAILURE_NOTIFICATION_INTERVAL_S="1800"
+      {{ hub_path }}/monitoring/run-monitoring.sh >> /home/jblew/cron.log 2>&1
