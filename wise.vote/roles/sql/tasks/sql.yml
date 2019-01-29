@@ -4,19 +4,18 @@
   git:
     #§ 'repo="https://github.com/' + data.config.repository.github.organization + '/steem-wise-sql.git"'
     repo="https://github.com/wise-team/steem-wise-sql.git"
-    dest="/opt/wise/sql"
+    dest="{{ sql_path }}"
     accept_hostkey=yes
     version={{ checkout_branch }}
     force=yes
 
 - name: Build Wise Sql docker container
   docker_service:
-    project_src: /opt/wise/sql
-    files: 
+    project_src: "{{ sql_path }}"
+    files:
       - docker-compose.yml
       - "docker-compose.{{ wise_environment_type }}.yml"
     build: yes
     nocache: yes
     recreate: always
     restarted: yes
-

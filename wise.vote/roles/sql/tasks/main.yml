@@ -1,4 +1,3 @@
-
 - name: Deploy wiseSQL
   import_tasks: sql.yml
   tags:
@@ -10,3 +9,10 @@
     - sql
     - sql-backup
     - backup
+
+- name: Setup wiseSQL monitoring
+  import_tasks: monitoring.yml
+  tags:
+    - sql
+    - sql-monitoring
+    - monitoring

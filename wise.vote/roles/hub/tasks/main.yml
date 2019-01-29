@@ -39,6 +39,7 @@
   tags:
     - hub
     - hub-monitoring
+    - monitoring
 
 - import_tasks: maintenance_off.yml
   tags:

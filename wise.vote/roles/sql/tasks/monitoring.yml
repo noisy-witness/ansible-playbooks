@@ -1,0 +1,14 @@
+---
+- name: "Setup sql monitoring task with cron"
+  cron:
+    name: "Wise SQL monitoring"
+    minute: "*/5"
+    job: >-
+      sleep 60 &&
+      SLACK_WEBHOOK_URL="{{ slack_webhook_url }}"
+      WISE_ENVIRONMENT_TYPE="{{ wise_environment_type }}"
+      SLACK_MENTIONS="{{ monitoring_notifications_slack_mentions }} "
+      WISE_SQL_URL="https://{{ domains.sql }}"
+      STEEM_API_URL="{{ default_steem_api }}"
+      FAILURE_NOTIFICATION_INTERVAL_S="1800"
+      {{ sql_path }}/monitoring/run-monitoring.sh >> {{ cron_log_path }} 2>&1

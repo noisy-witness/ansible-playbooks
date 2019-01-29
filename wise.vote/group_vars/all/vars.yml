@@ -4,3 +4,5 @@ logzio_token: "{{ vault_logzio_token }}"
 cron_log_path: /var/log/wise-cron.log
 scripts_path: /var/deploy/scripts
 backup_dir: /backup/wise
+#§ 'default_steem_api: ' + data.config.steem.defaultApiUrl
+default_steem_api: https://anyx.io
