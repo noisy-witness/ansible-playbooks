@@ -40,6 +40,7 @@
         - unzip
         - openssl
         - jq
+        - python-pip
 
     - name: Appending the group 'docker' to the user's groups
       become: yes
@@ -53,3 +54,8 @@
       become: yes
       shell: docker swarm init
 
+    - name: Prepare for ansible - install python docker module
+      become: yes
+      command: pip install docker
+      tags:
+        - common
