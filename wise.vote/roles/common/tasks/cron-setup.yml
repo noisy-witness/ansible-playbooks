@@ -2,7 +2,7 @@
   copy:
     content: ''
     dest: "{{ cron_log_path }}"
-    creates: "{{ cron_log_path }}"
+  creates: "{{ cron_log_path }}"
   become: yes
   tags:
     - common
