@@ -1,0 +1,13 @@
+---
+slack_webhook_url: "{{ vault_slack_webhook_url }}"
+monitoring_notifications_slack_mentions: "<@UAEGKTY3T> <@UASN9CGJ0> "
+certbot_email: noisy.pl@gmail.com
+root_domain: wise.vote
+domains:
+  root: "{{ root_domain }}"
+  docs: "docs.{{ root_domain }}"
+  sql: "sql.{{ root_domain }}"
+  old_hub: "hub.{{ root_domain }}"
+  test: "test.{{ root_domain }}"
+cert_domains: "{{ domains.root }} {{ domains.docs }} {{ domains.sql }} {{ domains.old_hub }} {{ domains.test }}"
+vault_url: "https://vault.{{ root_domain }}:8200"

@@ -1,0 +1,7 @@
+all:
+  hosts:
+    #§ data.config.environments.staging.host + ':'
+    tmp.wise.vote:
+      wise_environment_type: production
+      #§ 'checkout_branch: ' + data.config.environments.staging.deployBranch
+      checkout_branch: master
