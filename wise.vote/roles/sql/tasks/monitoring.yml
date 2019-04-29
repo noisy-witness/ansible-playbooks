@@ -1,4 +1,7 @@
 ---
+- name: "Install monitoring"
+  command: "{{ sql_path }}/monitoring/install-monitoring.sh"
+
 - name: "Setup sql monitoring task with cron"
   become: yes
   cron:
@@ -10,6 +13,6 @@
       SLACK_MENTIONS="{{ monitoring_notifications_slack_mentions }} "
       WISE_SQL_URL="https://{{ domains.sql }}/"
       STEEM_API_URL="{{ default_steem_api }}"
-      FAILURE_NOTIFICATION_INTERVAL_S="1800"
+      FAILURE_NOTIFICATION_INTERVAL_S="{{ monitoring_persisting_failure_notification_interval_seconds }}"
       CRON_JOB_NAME="Wise SQL monitoring"
       {{ scripts_path }}/wrap-cron.sh {{ sql_path }}/monitoring/run-monitoring.sh

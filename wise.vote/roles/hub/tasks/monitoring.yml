@@ -1,4 +1,7 @@
 ---
+- name: "Install monitoring"
+  command: "{{ hub_path }}/monitoring/install-monitoring.sh"
+
 - name: "Setup hub monitoring task with cron"
   become: yes
   cron:
@@ -9,6 +12,6 @@
       WISE_ENVIRONMENT_TYPE="{{ wise_environment_type }}"
       SLACK_MENTIONS="{{ monitoring_notifications_slack_mentions }} "
       WISE_HUB_URL="https://{{ root_domain }}"
-      FAILURE_NOTIFICATION_INTERVAL_S="1800"
+      FAILURE_NOTIFICATION_INTERVAL_S="{{ monitoring_persisting_failure_notification_interval_seconds }}"
       CRON_JOB_NAME="Wise HUB monitoring"
       {{ scripts_path }}/wrap-cron.sh {{ hub_path }}/monitoring/run-monitoring.sh

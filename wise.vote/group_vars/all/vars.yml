@@ -5,3 +5,4 @@ scripts_path: /var/deploy/scripts
 backup_dir: /backup/wise
 #§ 'default_steem_api: ' + data.config.steem.defaultApiUrl
 default_steem_api: https://anyx.io
+monitoring_persisting_failure_notification_interval_seconds: 3600
